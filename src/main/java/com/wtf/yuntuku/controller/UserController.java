@@ -113,10 +113,9 @@ public class UserController {
 
 
     /**
-     * 根据id获取用户 (仅管理员)
+     * 根据id获取用户封装类 (仅管理员)
      */
     @GetMapping("/get/vo")
-    @AuthCheck(mustRole = ADMIN_ROLE)
     public BaseResponse<UserVO> getUserVOById(long id) {
         BaseResponse<User> userResponse = getUserById(id);
         return ResultUtils.success(userService.getUserVO(userResponse.getData()));
@@ -135,7 +134,7 @@ public class UserController {
 
 
     /**
-     * 创建用户
+     * 更新用户
      * @param userUpdateRequest 用户信息
      * @return  用户id
      */

@@ -46,13 +46,16 @@ public class FileManager {
         String originalFilename = multipartFile.getOriginalFilename();
         String uuid = RandomUtil.randomString(16);
         // 使用时间戳+uuid+原始文件名后缀拼接上传文件名
-        String uploadFileName = String.format("%s/%s_%s", DateUtil.formatDate(new Date()), uuid, FileUtil.getSuffix(originalFilename));
+        String uploadFileName = String.format("%s_%s.%s", DateUtil.formatDate(new Date()), uuid,
+                FileUtil.getSuffix(originalFilename));
         // 拼接完整的上传路径
-        String uploadPath = String.format("%s/%s", uploadPathPrefix, uploadFileName);
+        String uploadPath = String.format("/%s/%s", uploadPathPrefix, uploadFileName);
         File file = null;
         try {
             // 创建临时文件
             file = File.createTempFile(uploadPath, null);
+            // 将上传的文件写入临时文件
+            multipartFile.transferTo(file);
             // 上传图片到对象存储
             PutObjectResult putObjectResult = cosManager.putPictureObject(uploadPath, file);
             ImageInfo imageInfo = putObjectResult.getCiUploadResult().getOriginalInfo().getImageInfo();
